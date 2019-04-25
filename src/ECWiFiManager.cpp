@@ -47,7 +47,6 @@ void  ECWiFiManager::LoadSsidFromEEPROM()
     ssid[i] = EEPROM.read(OFFSET_SSID + i);
   }
   EEPROM.end();
-  Serial.println("Loaded ssid from eeprom");
 }
 
 void  ECWiFiManager::LoadPassFromEEPROM()
@@ -58,8 +57,7 @@ void  ECWiFiManager::LoadPassFromEEPROM()
   {
     pass[i] = EEPROM.read(OFFSET_PASS + i);
   }
-  EEPROM.end();
-  Serial.println("Loaded pass from eeprom");  
+  EEPROM.end(); 
 }
 
 void  ECWiFiManager::SaveSsidToEEPROM(char* _ssid)

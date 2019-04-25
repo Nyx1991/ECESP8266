@@ -25,7 +25,7 @@ void setup()
   ecWebserver.begin();
   Serial.println("Ready");
 
-  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(16, OUTPUT, DIGITAL, "LED"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(17, INPUT, ANALOG, "LED"));  
 }
 
 void loop() 

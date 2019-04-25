@@ -40,7 +40,7 @@ String ECGPIO::GetJSON()
     else    
         type = DIGITAL_STR;    
     
-    return "{\"GPIO\": \""+String(pPinNumber)+"\", \"Caption\":\""+GetCaption()+"\", \"Value\": \""+String(GetValue())+"\", \"Mode\":\""+mode+"\", \"Type\":\""+type+"\" }";    
+    return "{\"GPIO\": \""+String(pPinNumber)+"\", \"Caption\":\""+GetCaption()+"\", \"Value\": \""+String(GetValue())+"\", \"ValueText\":\""+GetValueText()+"\", \"Mode\":\""+mode+"\", \"Type\":\""+type+"\" }";    
 }
 
 String ECGPIO::ToString()

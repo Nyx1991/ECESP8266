@@ -1,13 +1,13 @@
 #ifndef ECGPIO_H
 #define ECGPIO_H
 
-#define ANALOG 0x00
-#define DIGITAL 0x01
-
 #define ANALOG_STR "ANALOG"
 #define DIGITAL_STR "DIGITAL"
 #define OUTPUT_STR "OUTPUT"
 #define INPUT_STR "INPUT"
+
+#define ANALOG 0x00
+#define DIGITAL 0x01
 
 #include <Arduino.h>
 #include <stdint.h>

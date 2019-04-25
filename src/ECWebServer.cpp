@@ -49,7 +49,7 @@ void ECWebServer::onIndex()
   }
   else
   {
-    sendToClient("Index");
+    sendToClient(ecHtmlBuilder.GetIndexHtml());
   }  
 }
 
@@ -59,8 +59,7 @@ void ECWebServer::onCmd()
   String cmd = server->arg("cmd");
   ECGPIO* gpio = nullptr;
   ECGPIO* gpios = nullptr;    
-  int gpioCount = ecGPIOManager.GetECGPIOCount();  
-  int pin;
+  int gpioCount = ecGPIOManager.GetECGPIOCount();
   
   output = "Commands";
 
@@ -86,6 +85,10 @@ void ECWebServer::onCmd()
       }
     }    
     output += "]";
+  }
+  else if(cmd == "statushtml")
+  {
+    output = ecHtmlBuilder.GetECGPIOHtml();
   }
   else if(cmd == "set")
   {
@@ -131,8 +134,7 @@ void ECWebServer::onCmd()
   }
 
   gpio = nullptr;
-  gpios = nullptr;
-  pin = NULL;
+  gpios = nullptr;  
   gpioCount = NULL;
 
   this->sendToClient(output);
