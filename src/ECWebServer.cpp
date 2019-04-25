@@ -77,7 +77,7 @@ void ECWebServer::onCmd()
     output = "[";
     for (int i=0; i < ecGPIOManager.GetECGPIOCount(); i++)
     {
-      gpio = &ecGPIOManager.GetGPIOArray()[i];
+      gpio = ecGPIOManager.GetGPIOArray()[i];
       output += gpio->GetJSON();
       if (i+1 != ecGPIOManager.GetECGPIOCount())
       {

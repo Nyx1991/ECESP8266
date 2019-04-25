@@ -14,8 +14,16 @@ String ECHtmlBuilder::GetECGPIOHtml()
 {
     String ret = "";   
     for (int i=0; i < ecGPIOManager.GetECGPIOCount(); i++)
-    {      
-        ret += this->GetECGPIOHtmlForECGPIO(&ecGPIOManager.GetGPIOArray()[i]);        
+    {    
+        if (i % 2 == 0)
+        {
+            ret += "<div class='gpr'>";
+        }
+        ret += this->GetECGPIOHtmlForECGPIO(ecGPIOManager.GetGPIOArray()[i]);        
+        if (i % 2 == 1)
+        {
+            ret += "</div>";
+        }
     }
     return ret;
 }

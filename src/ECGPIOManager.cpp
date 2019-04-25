@@ -1,15 +1,15 @@
 #include "ECGPIOManager.h"
 
-int      gpioCount;
-ECGPIO*  gpios;
+int         gpioCount;
+ECGPIO**    gpios;
 
 ECGPIOManager::ECGPIOManager()
 {           
     gpioCount = 0;
-    gpios = new ECGPIO[gpioCount];
+    gpios = new ECGPIO*[gpioCount];
 }
 
-ECGPIO* ECGPIOManager ::GetGPIOArray()
+ECGPIO** ECGPIOManager::GetGPIOArray()
 {
     return gpios;
 }
@@ -26,11 +26,11 @@ void ECGPIOManager::AddECGPIO(ECGPIO* _ecgpio)
         Serial.println("Pin "+String(_ecgpio->GetPinNumber())+" already declared.");        
         return;
     }
-    ECGPIO* tmp = { _ecgpio };
-	ECGPIO* newArray = new ECGPIO[gpioCount+1];
+    ECGPIO** tmp = { &_ecgpio };
+	ECGPIO** newArray = new ECGPIO*[gpioCount+1];
 
-	memcpy(newArray, gpios, gpioCount * sizeof(ECGPIO));
-	memcpy(newArray + gpioCount, tmp, sizeof(ECGPIO));
+	memcpy(newArray, gpios, gpioCount * sizeof(&_ecgpio));
+	memcpy(newArray + gpioCount, tmp, sizeof(&_ecgpio));
 	delete[] gpios;
 	gpios = newArray;
     gpioCount++;
@@ -46,7 +46,7 @@ ECGPIO* ECGPIOManager::GetECGPIOByPinNr(uint8_t _pinNr)
     ECGPIO*  gpio;
     for (int i=0; i < ECGPIOManager::GetECGPIOCount(); i++)
     {      
-        gpio = &gpios[i];
+        gpio = gpios[i];
         if (gpio->GetPinNumber() == _pinNr)
         {
             return gpio;

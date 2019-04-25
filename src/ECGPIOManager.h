@@ -14,7 +14,7 @@ class ECGPIOManager
         static void     AddECGPIO(ECGPIO* _ecgpio);
         static ECGPIO*  GetECGPIOByPinNr(uint8_t _pinNr);
         static int      GetECGPIOCount();
-        static ECGPIO*  GetGPIOArray();
+        static ECGPIO** GetGPIOArray();
 };
 
 #endif
