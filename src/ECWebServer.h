@@ -10,6 +10,7 @@ class ECWebServer
     ESP8266WebServer* server;    
     void onIndex();
     void onCmd();
+    void onSysInfo();
     void sendToClient(String _message);    
     ECHtmlBuilder ecHtmlBuilder;
     

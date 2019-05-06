@@ -15,7 +15,8 @@ ECWebServer::ECWebServer()
 
   server = new ESP8266WebServer(80);
   server->on("/", std::bind(&ECWebServer::onIndex, this));
-  server->on("/cmd", std::bind(&ECWebServer::onCmd, this));  
+  server->on("/cmd", std::bind(&ECWebServer::onCmd, this));
+  server->on("/sysinfo", std::bind(&ECWebServer::onSysInfo, this));
 }
 
 void ECWebServer::listen()
@@ -51,6 +52,11 @@ void ECWebServer::onIndex()
   {
     sendToClient(ecHtmlBuilder.GetIndexHtml());
   }  
+}
+
+void ECWebServer::onSysInfo()
+{
+  sendToClient(ecHtmlBuilder.GetSystemInfoHtml());
 }
 
 void ECWebServer::onCmd()
@@ -113,7 +119,18 @@ void ECWebServer::onCmd()
   {
     ecWifiManager.SaveSsidToEEPROM(strdup(server->arg("ssid").c_str()));
     ecWifiManager.SavePassToEEPROM(strdup(server->arg("password").c_str()));
+    ECParamManager::WriteCharString(PARAM_ADDR_NAME, PARAM_SIZE_NAME, strdup(server->arg("name").c_str()));
     ESP.reset();
+  }
+  else if(cmd == "setdevicename")
+  {
+    ECParamManager::WriteCharString(PARAM_ADDR_NAME, PARAM_SIZE_NAME, strdup(server->arg("name").c_str()));
+    ESP.reset();
+  }
+  else if(cmd == "getdevicename")
+  {
+    char* name = ECParamManager::ReadCharString(PARAM_ADDR_NAME, PARAM_SIZE_NAME);
+    output = String(name);    
   }
   else if(cmd == "toggle")
   {

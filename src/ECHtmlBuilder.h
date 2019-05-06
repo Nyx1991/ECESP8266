@@ -4,26 +4,60 @@
 #include <Arduino.h>
 #include "ECGPIO.h"
 #include "ECGPIOManager.h"
+#include "ECParamManager.h"
+#include <ESP8266WiFi.h>
 
 extern ECGPIOManager ecGPIOManager;
 
 class ECHtmlBuilder
 {
-    private:
+    private:     
+        const String deviceNameStr = (String)ECParamManager::ReadCharString(PARAM_ADDR_NAME, PARAM_SIZE_NAME);   
         const String htmlhead = "<html>"
         "<head>"
         "<style>"
-        "body{"
+        "body"
+        "{"
             "background:#424242;"
             "font-family:'LucidaGrande','LucidaSansUnicode','LucidaSans','DejaVuSans',Verdana,'sans-serif';"
             "font-size:36px;"
             "color:white;"
+            "text-align: center;"
         "}"
         "h1{"
         "    display:block;"
             "font-weight:bold;"
         "}"
-        "	"
+        "table"
+        "{"
+        "	display: inline-table;"
+            "text-align: left;	"
+            "font-size: 14px;"
+        "}"
+        "tr"
+        "{"
+        "	height: 20px;"
+        "}"
+        "td"
+        "{"
+        "	width: 300px;"
+        "}"
+        ".nav"
+        "{"
+            "margin-top: 50px;"
+            "color: #B9B9B9;"
+            "font-size: 14px;"
+        "}"
+        ".nav a"
+        "{"
+            "color: #B9B9B9;"
+            "text-decoration: none;"
+        "}"
+        ".nav a:hover"
+        "{"
+            "color: white;"
+            "text-decoration: none;"
+        "}"
         ".gpio.ON {"
             "background:#00C816;"
         "}"
@@ -68,7 +102,6 @@ class ECHtmlBuilder
             "font-size:42px;"
         "}"
         ".wr {"
-            "margin:10pxauto;"
             "text-align:center;"
         "}"
         "input, button {"        
@@ -142,17 +175,19 @@ class ECHtmlBuilder
             "window.onload = initPage;"
         "</script>"
         "<meta charset='utf-8'>"
-        "<title>index</title>"
+        "<title>"+deviceNameStr+"</title>"
         "</head>"
         "<body>";
-        const String body = "</body></html>";    
-        const String wiFiConfigPage = "<div class=\"wr\"><h1>Welcome!</h1><form action=\"/cmd\" method=\"get\">	<input type=\"hidden\" value=\"setwificonf\" name=\"cmd\" /><input name=\"ssid\" type=\"text\" placeholder=\"SSID\" /></br>	<input name=\"password\" type=\"password\" placeholder=\"PASSWORD\" /></br>	<button type=\"submit\">Save and reboot</button></form></div>";
-        const String indexPage = "<div class=\"wr\"><h1>Overview</h1><div id=\"gps\" class=\"gps\"></div>";
+        const String body = "<div class='nav'><a href='/'>Index</a> | <a href='/sysinfo'>System</a> | <a href='/settings'>Settings</a></div></body></html>";    
+        const String wiFiConfigPage = "<div class='wr'><h1>Welcome!</h1><form action='/cmd' method='get'>	<input type='hidden' value='setwificonf' name='cmd' /><input name='name' type='text' placeholder='DEVICE NAME' /></br><input name='ssid' type='text' placeholder='SSID' /></br>	<input name='password' type='password' placeholder='PASSWORD' /></br>	<button type='submit'>Save and reboot</button></form></div>";
+        const String indexPage = "<div class='wr'><h1>"+deviceNameStr+"</h1><div id='gps' class='gps'></div>";
+        const String SystemInfoPage = "<div class='wr'><h1>System</h1>";
         String GetECGPIOHtmlForECGPIO(ECGPIO* _gpio);     
 
     public:
         String GetWiFiConfigPage();
         String GetIndexHtml();
+        String GetSystemInfoHtml();
         String GetECGPIOHtml();
 };
 

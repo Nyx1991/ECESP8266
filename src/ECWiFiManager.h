@@ -3,22 +3,19 @@
 
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
-#include <EEPROM.h>
-
-#define OFFSET_SSID 0x00
-#define OFFSET_PASS 0x50
+#include "ECParamManager.h"
 
 class ECWiFiManager
 {
   private:
-    char  ssid[80];
-    char  pass[80];
-    void  LoadSsidFromEEPROM();
-    void  LoadPassFromEEPROM();
+    char   ssid[PARAM_SIZE_SSID];
+    char   pass[PARAM_SIZE_PASS];
+    void   LoadSsidFromEEPROM();
+    void   LoadPassFromEEPROM();
   public:
     ECWiFiManager();
-    void begin();
-    bool isInApMode();
+    void  begin();
+    bool  isInApMode();
     void  SaveSsidToEEPROM(char* _ssid);
     void  SavePassToEEPROM(char* _pass);
 };
