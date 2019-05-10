@@ -16,6 +16,7 @@ ECWebServer::ECWebServer()
   server = new ESP8266WebServer(80);
   server->on("/", std::bind(&ECWebServer::onIndex, this));
   server->on("/cmd", std::bind(&ECWebServer::onCmd, this));
+  server->on("/mqtt", std::bind(&ECWebServer::onMqtt, this));
   server->on("/sysinfo", std::bind(&ECWebServer::onSysInfo, this));
 }
 
@@ -52,6 +53,11 @@ void ECWebServer::onIndex()
   {
     sendToClient(ecHtmlBuilder.GetIndexHtml());
   }  
+}
+
+void ECWebServer::onMqtt()
+{
+  sendToClient(ecHtmlBuilder.GetMqttConfHtml());
 }
 
 void ECWebServer::onSysInfo()
@@ -120,6 +126,41 @@ void ECWebServer::onCmd()
     ecWifiManager.SaveSsidToEEPROM(strdup(server->arg("ssid").c_str()));
     ecWifiManager.SavePassToEEPROM(strdup(server->arg("password").c_str()));
     ECParamManager::WriteCharString(PARAM_ADDR_NAME, PARAM_SIZE_NAME, strdup(server->arg("name").c_str()));
+    ESP.reset();
+  }
+  else if(cmd == "setmqttconf")
+  {
+    IPAddress host;    
+    host.fromString(server->arg("host"));
+    const uint16_t* port = new uint16_t((uint16_t)atoi(server->arg("port").c_str()));
+    const char* clientId = server->arg("clientId").c_str();
+    const char* user = server->arg("username").c_str();
+    const char* pass = server->arg("password").c_str();
+    const char* topic = server->arg("topic").c_str();
+    const char* fulltopic = server->arg("fulltopic").c_str();
+
+    if(strlen(clientId) > 0)
+      ECParamManager::WriteCharString(PARAM_ADDR_MQTT_CLIENTID, PARAM_SIZE_MQTT_CLIENTID, clientId);
+    if(strlen(user) > 0)
+      ECParamManager::WriteCharString(PARAM_ADDR_MQTT_USERNAME, PARAM_SIZE_MQTT_USERNAME, user);
+    if(strlen(pass) > 0)
+      ECParamManager::WriteCharString(PARAM_ADDR_MQTT_PASS, PARAM_SIZE_MQTT_PASS, pass);
+    if(strlen(topic) > 0)
+      ECParamManager::WriteCharString(PARAM_ADDR_MQTT_TOPIC, PARAM_SIZE_MQTT_TOPIC, topic);
+    if(strlen(fulltopic) > 0)
+      ECParamManager::WriteCharString(PARAM_ADDR_MQTT_FULLTOPIC, PARAM_SIZE_MQTT_FULLTOPIC, fulltopic);
+    if(strlen(server->arg("host").c_str()) > 0)
+      ECParamManager::WriteCharString(PARAM_ADDR_MQTT_HOST, PARAM_ADDR_MQTT_HOST, host.toString().c_str());
+    if(strlen(server->arg("port").c_str()) > 0)
+      ECParamManager::WriteUint16(PARAM_ADDR_MQTT_PORT, port);
+
+    delete clientId;
+    delete pass;
+    delete user;
+    delete topic;
+    delete port;
+    delete fulltopic;
+    
     ESP.reset();
   }
   else if(cmd == "setdevicename")

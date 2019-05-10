@@ -12,8 +12,7 @@ ECWebServer     ecWebserver;
 ECWiFiManager   ecWifiManager;
 ECGPIOManager   ecGPIOManager;
 ECHtmlBuilder   ecHtmlBuilder;
-
-char* deviceName;
+ECParamManager  ecParamManager;
 
 ECGPIO* gpio;
 
@@ -25,16 +24,15 @@ void setup()
   if (!ecWifiManager.isInApMode())
   {
     ecOTA.begin();
-  }
-  
-  deviceName = ECParamManager::ReadCharString(PARAM_ADDR_NAME, PARAM_SIZE_NAME);
+  }  
 
   ecWebserver.begin();
   Serial.println("Ready");
 
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(17, INPUT, ANALOG, "Light"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(16, OUTPUT, DIGITAL, "LED"));
-  
+  //ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(2, OUTPUT, DIGITAL, "LED"));
+
 }
 
 void loop() 

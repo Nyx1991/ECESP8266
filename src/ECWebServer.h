@@ -11,6 +11,7 @@ class ECWebServer
     void onIndex();
     void onCmd();
     void onSysInfo();
+    void onMqtt();
     void sendToClient(String _message);    
     ECHtmlBuilder ecHtmlBuilder;
     
