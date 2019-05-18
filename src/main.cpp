@@ -5,38 +5,50 @@
 #include "ECGPIO.h"
 #include "ECGPIOManager.h"
 #include "ECHtmlBuilder.h"
-#include "ECParamManager.h"
+#include "ECSettingsManager.h"
+#include "ECMQTTManager.h"
+#include "ECTypes.h"
 
-ECOTAManager    ecOTA;
-ECWebServer     ecWebserver;
-ECWiFiManager   ecWifiManager;
-ECGPIOManager   ecGPIOManager;
-ECHtmlBuilder   ecHtmlBuilder;
-ECParamManager  ecParamManager;
+ECOTAManager      *ecOTA;
+ECWebServer       *ecWebserver;
+ECWiFiManager     *ecWifiManager;
+ECHtmlBuilder     *ecHtmlBuilder;
+ECSettingsManager *ecSettingsManager;
+ECMQTTManager     *ecMQTTManager;
 
-ECGPIO* gpio;
+ECSettings        settings;
 
 void setup() 
 {      
   Serial.begin(115200);
-  ecWifiManager.begin();
+  ECSettingsManager::LoadSettings();
 
-  if (!ecWifiManager.isInApMode())
+  ecOTA = new ECOTAManager();
+  ecWebserver = new ECWebServer();
+  ecWifiManager = new ECWiFiManager();
+  ecHtmlBuilder = new ECHtmlBuilder();
+  ecSettingsManager = new ECSettingsManager();
+  ecMQTTManager = new ECMQTTManager();
+
+  ecWifiManager->begin();
+
+  if (!ecWifiManager->isInApMode())
   {
-    ecOTA.begin();
+    ecOTA->begin();
   }  
 
-  ecWebserver.begin();
+  ecWebserver->begin();
+  ecMQTTManager->begin();
   Serial.println("Ready");
 
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(17, INPUT, ANALOG, "Light"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(16, OUTPUT, DIGITAL, "LED"));
   //ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(2, OUTPUT, DIGITAL, "LED"));
-
+  ECSettingsManager::DumpMemory();  
 }
 
 void loop() 
 {
-  ecOTA.listen();
-  ecWebserver.listen();
+  ecOTA->listen();
+  ecWebserver->listen();
 }

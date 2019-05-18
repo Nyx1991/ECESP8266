@@ -3,24 +3,25 @@
 
 #include <PubSubClient.h>
 #include <ESP8266WiFi.h>
-#include "ECParamManager.h"
+#include "ECSettingsManager.h"
+#include "ECTypes.h"
 
-extern ECParamManager   ecParamManager;
+extern ECSettings settings;
 
 class ECMQTTManager
 {
     private:
         WiFiClient espClient;
         PubSubClient client = PubSubClient(espClient);
-        const char* topic;
-        const char* fulltopic;
-        const char* parseFulltopic(const char* _fulltopic);
-        void callback(char* topic, byte* payload, unsigned int length);        
+
+        void str_to_uint16(char *str, uint16_t *res);
+        const char* parseFulltopic(const char* _fulltopic, const char *_prefix);
+        const char* replacePlaceholder(const char* _placeholder, const char *_prefix);
+        static void callback(char* topic, uint8_t* payload, unsigned int length);
     public:
         void begin();
-        void listen();        
+        void listen();
+        bool isActive();
 };
-
-
 
 #endif

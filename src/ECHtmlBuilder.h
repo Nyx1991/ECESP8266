@@ -4,15 +4,17 @@
 #include <Arduino.h>
 #include "ECGPIO.h"
 #include "ECGPIOManager.h"
-#include "ECParamManager.h"
+#include "ECSettingsManager.h"
+#include "ECMQTTManager.h"
 #include <ESP8266WiFi.h>
 
-extern ECGPIOManager ecGPIOManager;
+extern ECMQTTManager *ecMQTTManager;
+extern ECSettings settings;
 
 class ECHtmlBuilder
 {
     private:     
-        const String deviceNameStr = (String)ECParamManager::ReadCharString(PARAM_ADDR_NAME, PARAM_SIZE_NAME);   
+        const String deviceNameStr = (String)settings.name;   
         const String htmlhead = "<html>"
         "<head>"
         "<style>"
@@ -27,6 +29,10 @@ class ECHtmlBuilder
         "h1{"
         "    display:block;"
             "font-weight:bold;"
+        "}"
+        "h2"
+        "{"
+            "font-size: 22px;"
         "}"
         "table"
         "{"
@@ -179,7 +185,7 @@ class ECHtmlBuilder
         "</head>"
         "<body>";
         const String body = "<div class='nav'><a href='/'>Index</a> | <a href='/mqtt'>MQTT</a> | <a href='/blynk'>Blynk</a> | <a href='/sysinfo'>System</a></div></body></html>";    
-        const String wiFiConfigPage = "<div class='wr'><h1>Welcome!</h1><form action='/cmd' method='get'>	<input type='hidden' value='setwificonf' name='cmd' /><input name='name' type='text' placeholder='DEVICE NAME' /></br><input name='ssid' type='text' placeholder='SSID' /></br>	<input name='password' type='password' placeholder='PASSWORD' /></br>	<button type='submit'>Save and reboot</button></form></div>";
+        const String wiFiConfigPage = "<div class='wr'><h1>Welcome!</h1><form action='/cmd' method='get'><input type='hidden' value='setwificonf' name='cmd' /><input name='name' type='text' placeholder='DEVICE NAME' /></br><input name='ssid' type='text' placeholder='SSID' /></br>	<input name='password' type='password' placeholder='PASSWORD' /></br>	<button type='submit'>Save and reboot</button></form></div>";
         const String indexPage = "<div class='wr'><h1>"+deviceNameStr+"</h1><div id='gps' class='gps'></div>";
         const String SystemInfoPage = "<div class='wr'><h1>System</h1>";
         const String MqttConfigurationPage = "<div class='wr'><h1>MQTT<form action='/cmd' method='get'></h1>";
