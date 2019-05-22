@@ -33,7 +33,7 @@ void ECGPIOManager::AddECGPIO(ECGPIO* _ecgpio)
 	memcpy(newArray + gpioCount, tmp, sizeof(&_ecgpio));
 	delete[] gpios;
 	gpios = newArray;
-    gpioCount++;
+    gpioCount++;    
 }
 
 int ECGPIOManager::GetECGPIOCount()
@@ -43,7 +43,7 @@ int ECGPIOManager::GetECGPIOCount()
 
 ECGPIO* ECGPIOManager::GetECGPIOByPinNr(uint8_t _pinNr)
 {    
-    ECGPIO*  gpio;
+    ECGPIO*  gpio;    
     for (int i=0; i < ECGPIOManager::GetECGPIOCount(); i++)
     {      
         gpio = gpios[i];
@@ -53,6 +53,39 @@ ECGPIO* ECGPIOManager::GetECGPIOByPinNr(uint8_t _pinNr)
         }
     }
     return nullptr;
+}
+
+ECGPIO* ECGPIOManager::GetECGPIOByCaption(const char* _caption)
+{    
+    ECGPIO*  gpio;
+    for (int i=0; i < ECGPIOManager::GetECGPIOCount(); i++)
+    {      
+        gpio = gpios[i];
+        if (gpio->GetCaption() == String(_caption))
+        {
+            return gpio;
+        }
+    }
+    return nullptr;
+}
+
+void ICACHE_RAM_ATTR ECGPIOManager::HandleInterrupt()
+{        
+    ECGPIO* gpio;
+    delay(10);
+    for (int i = 0; i < ECGPIOManager::GetECGPIOCount(); i++)
+    {
+        gpio = gpios[i];
+        if (gpio->GetPinMode() == INPUT && gpio->GetPinType() == DIGITAL)
+        {            
+            if (gpio->GetValue() != gpio->GetOldValue())
+            {                
+                Serial.println("Interrupt: new:"+ String(gpio->GetValue()) + " old: " + String(gpio->GetOldValue()));
+                gpio->SetOldValue(gpio->GetValue());
+                gpio->ValueChanged();
+            }
+        }
+    }    
 }
 
 ECGPIOManager::~ECGPIOManager()

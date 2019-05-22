@@ -60,7 +60,17 @@ String ECGPIO::GetValueText()
 
 void ECGPIO::SetValue(int _value)
 {
+    return;
+}
 
+void ECGPIO::Toggle()
+{	
+	return;
+}
+
+void ECGPIO::Toggle(ulong _time)
+{	
+	return;
 }
 
 uint8_t ECGPIO::GetPinMode()
@@ -71,6 +81,21 @@ uint8_t ECGPIO::GetPinMode()
 uint8_t ECGPIO::GetPinType()
 {
     return pPinType;
+}
+
+void ECGPIO::SetOldValue(int i)
+{
+    oldValue = i;
+}
+
+int ECGPIO::GetOldValue()
+{
+    return oldValue;
+}
+
+void ECGPIO::ValueChanged()
+{
+    return;
 }
 
 ECGPIO::~ECGPIO()

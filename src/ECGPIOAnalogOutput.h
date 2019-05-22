@@ -10,6 +10,9 @@ class ECGPIOAnalogOutput : public ECGPIO
         int GetValue();
         String GetValueText();
         void SetValue(int _value);
+        void Toggle();
+        void Toggle(ulong _time);
+        void ValueChanged();
         ECGPIOAnalogOutput(uint8_t _pinNumber, char* _caption);
 };
 

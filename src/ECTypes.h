@@ -3,6 +3,16 @@
 
 #include <IPAddress.h>
 
+template<typename Tret, typename T>
+Tret lambda_ptr_exec(T* v) {
+    return (Tret) (*v)();
+}
+
+template<typename Tret = void, typename Tfp = Tret(*)(), typename T>
+Tfp lambda_ptr(T& v) {
+    return (Tfp) lambda_ptr_exec<Tret, T>;
+}
+
 typedef struct
 {
     char ssid[32];

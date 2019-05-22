@@ -3,18 +3,19 @@
 
 #include <stdint.h>
 #include "ECGPIO.h"
+#include "ECGPIODigitalInput.h"
 
 class ECGPIOManager
-{
-    private:
-        
+{ 
     public:
         ECGPIOManager();
         ~ECGPIOManager();
-        static void     AddECGPIO(ECGPIO* _ecgpio);
+        static void     AddECGPIO(ECGPIO* _ecgpio);                        
         static ECGPIO*  GetECGPIOByPinNr(uint8_t _pinNr);
+        static ECGPIO*  GetECGPIOByCaption(const char* _caption);
         static int      GetECGPIOCount();
         static ECGPIO** GetGPIOArray();
+        static void     ICACHE_RAM_ATTR HandleInterrupt();
 };
 
 #endif

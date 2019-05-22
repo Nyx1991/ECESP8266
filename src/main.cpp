@@ -43,12 +43,12 @@ void setup()
 
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(17, INPUT, ANALOG, "Light"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(16, OUTPUT, DIGITAL, "LED"));
-  //ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(2, OUTPUT, DIGITAL, "LED"));
-  ECSettingsManager::DumpMemory();  
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(14, INPUT, DIGITAL, "BTN"));
 }
 
 void loop() 
-{
+{  
   ecOTA->listen();
   ecWebserver->listen();
+  ecMQTTManager->listen();
 }

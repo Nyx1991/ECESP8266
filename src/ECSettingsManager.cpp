@@ -1,6 +1,5 @@
 #include "ECSettingsManager.h"
 #include <Arduino.h>
-#include "ECTypes.h"
 
 extern ECSettings settings;
 
@@ -23,7 +22,7 @@ void ECSettingsManager::LoadSettings()
 void ECSettingsManager::DumpMemory()
 {
     EEPROM.begin(sizeof(settings));
-    for (int i=0; i < sizeof(settings); i++)
+    for (ulong i=0; i < sizeof(settings); i++)
     {
         if (i % 10 == 0)
         {
@@ -38,7 +37,7 @@ void ECSettingsManager::DumpMemory()
 void ECSettingsManager::EraseEEPROM() 
 {  
   EEPROM.begin(EEPROM_SIZE);
-  for (int i = 0 ; i < sizeof(settings) ; i++) {
+  for (ulong i = 0 ; i < sizeof(settings) ; i++) {
     EEPROM.write(i, 0);
   }
   delay(200);

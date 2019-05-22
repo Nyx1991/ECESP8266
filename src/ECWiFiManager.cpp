@@ -14,7 +14,6 @@ void ECWiFiManager::begin()
   
   WiFi.mode(WIFI_STA);
   WiFi.begin(settings.ssid, settings.pass);
-
   if (WiFi.waitForConnectResult() == WL_CONNECTED)
   {
     Serial.println("WiFi ready");

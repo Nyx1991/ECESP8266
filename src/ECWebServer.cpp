@@ -165,13 +165,15 @@ void ECWebServer::onCmd()
     gpio = ecGPIOManager.GetECGPIOByPinNr(server->arg("gpio").toInt());    
     if (gpio != nullptr)
     {
-      if (gpio->GetPinMode() == OUTPUT && gpio->GetPinType() == DIGITAL)
-      {
-        if (gpio->GetValue() == 1)
-          gpio->SetValue(0);
-        else
-          gpio->SetValue(1);
+      if (server->arg("time") != "")
+      {        
+        gpio->Toggle(strtoul(server->arg("time").c_str(), NULL, 0));
       }
+      else
+      {
+        gpio->Toggle();
+      }
+      
       output = String(gpio->GetValue());
     }
     else
