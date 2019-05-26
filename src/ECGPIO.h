@@ -12,8 +12,8 @@
 #include <Arduino.h>
 #include <stdint.h>
 #include <string>
-#include "ECMQTTManager.h"
 #include "ECTypes.h"
+#include "ECMQTTManager.h"
 
 extern ECMQTTManager *ecMQTTManager;
 

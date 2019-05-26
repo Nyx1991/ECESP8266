@@ -15,6 +15,12 @@ Tfp lambda_ptr(T& v) {
 
 typedef struct
 {
+    char key[40];
+    char value[40];
+} ECDictEntry;
+
+typedef struct
+{
     char ssid[32];
     char pass[63];
     char name[50];

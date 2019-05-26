@@ -12,7 +12,7 @@ int ECGPIOAnalogOutput::GetValue()
 }
 
 String ECGPIOAnalogOutput::GetValueText()
-{
+{    
     return String(analogRead(this->pPinNumber));
 }
 
