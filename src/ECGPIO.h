@@ -25,11 +25,14 @@ class ECGPIO
         uint8_t pPinType;
         char    caption[10];
         int     oldValue = -1;
+        int     currentValue = 0;
         ECGPIO(uint8_t _pinNumber, uint8_t _pinMode, uint8_t _pinType, char* _caption);
     public:
         ECGPIO();
         void SetOldValue(int i);
         int GetOldValue();
+        void SetCurrentValue(int i);
+        int GetCurrentValue();
         virtual void ValueChanged();
         virtual int GetValue();
         virtual String GetValueText();

@@ -8,14 +8,19 @@ ECGPIODigitalOutput::ECGPIODigitalOutput(uint8_t _pinNumber, char* _caption)
 
 int ECGPIODigitalOutput::GetValue()
 {
-	return digitalRead(this->pPinNumber);
+	int value = this->GetCurrentValue();
+	Serial.print("Reading Pin ");
+	Serial.print(GetPinNumber());
+	Serial.print(": ");
+	Serial.println(this->GetCurrentValue());
+	return value;
 }
 
 String ECGPIODigitalOutput::GetValueText()
-{
-	if (digitalRead(this->pPinNumber) == LOW)
+{	
+	if (this->GetCurrentValue() == LOW)
 		return "OFF";
-	if (digitalRead(this->pPinNumber) == HIGH)
+	if (this->GetCurrentValue() == HIGH)
 		return "ON";
 
 	return "N/A";
@@ -23,10 +28,24 @@ String ECGPIODigitalOutput::GetValueText()
 
 void ECGPIODigitalOutput::SetValue(int _value)
 {
+	this->SetCurrentValue(_value);
+
 	if (_value == 0)
+	{
     	digitalWrite(this->pPinNumber, LOW);
+		Serial.print("Setting Pin ");
+		Serial.print(GetPinNumber());
+		Serial.print(" to ");
+		Serial.println(_value);
+	}
 	if (_value == 1)
+	{
 		digitalWrite(this->pPinNumber, HIGH);
+		Serial.print("Setting Pin ");
+		Serial.print(GetPinNumber());
+		Serial.print(" to ");
+		Serial.println(_value);
+	}	
 	if (ecMQTTManager->isActive())
 		ecMQTTManager->publishStat(GetCaption().c_str(), String(GetValue()).c_str());
 }

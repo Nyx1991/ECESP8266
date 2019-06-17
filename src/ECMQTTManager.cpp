@@ -49,9 +49,16 @@ void ECMQTTManager::callback(char* _topic, uint8_t* _payload, unsigned int lengt
         ECMQTTManager::ProccessCommand(topicDict, topicSize, payloadDict, payloadSize);
     }
 
-    delay(10);
-    //delete[] topicDict;
-    //delete[] payloadDict;
+    delay(10);    
+    delete tmpEntry;    
+    for (size_t i = 0; i < topicSize; i++)
+    {
+        delete topicDict[i];
+    }
+    for (size_t i = 0; i < payloadSize; i++)
+    {
+        delete payloadDict[i];
+    }
 }
 
 bool ECMQTTManager::isActive()

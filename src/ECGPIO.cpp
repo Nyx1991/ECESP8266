@@ -83,6 +83,16 @@ uint8_t ECGPIO::GetPinType()
     return pPinType;
 }
 
+void ECGPIO::SetCurrentValue(int i)
+{
+    this->currentValue = i;
+}
+
+int ECGPIO::GetCurrentValue()
+{
+    return this->currentValue;
+}
+
 void ECGPIO::SetOldValue(int i)
 {
     oldValue = i;

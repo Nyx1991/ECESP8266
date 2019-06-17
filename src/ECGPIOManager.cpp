@@ -79,8 +79,7 @@ void ICACHE_RAM_ATTR ECGPIOManager::HandleInterrupt()
         if (gpio->GetPinMode() == INPUT && gpio->GetPinType() == DIGITAL)
         {            
             if (gpio->GetValue() != gpio->GetOldValue())
-            {                
-                Serial.println("Interrupt: new:"+ String(gpio->GetValue()) + " old: " + String(gpio->GetOldValue()));
+            {                                
                 gpio->SetOldValue(gpio->GetValue());
                 gpio->ValueChanged();
             }

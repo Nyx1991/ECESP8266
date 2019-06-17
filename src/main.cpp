@@ -41,9 +41,15 @@ void setup()
   ecMQTTManager->begin();
   Serial.println("Ready");
 
-  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(17, INPUT, ANALOG, "Light"));
-  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(16, OUTPUT, DIGITAL, "LED"));
-  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(14, INPUT, DIGITAL, "BTN"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(14, INPUT, DIGITAL, "LED"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(4, OUTPUT, DIGITAL, "POWER"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(12, OUTPUT, DIGITAL, "COF1"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(13, OUTPUT, DIGITAL, "COF2"));
+
+  if (ecMQTTManager->isActive())
+  {
+      ecMQTTManager->publishStat("ready", "");
+  }
 }
 
 void loop() 

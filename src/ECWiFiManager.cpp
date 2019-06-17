@@ -24,7 +24,9 @@ void ECWiFiManager::begin()
   { 
     Serial.println("Connection failed... setting up access point");    
     WiFi.disconnect();
+    Serial.println("Disconnected");
     WiFi.mode(WIFI_AP);
+    Serial.println("Setting AP Mode");
     WiFi.softAP("ecESP8266");
     Serial.println("AP ready: " + WiFi.softAPIP().toString());
   }

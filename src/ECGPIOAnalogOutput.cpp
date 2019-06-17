@@ -8,7 +8,8 @@ ECGPIOAnalogOutput::ECGPIOAnalogOutput(uint8_t _pinNumber, char* _caption)
 
 int ECGPIOAnalogOutput::GetValue()
 {
-    return analogRead(this->pPinNumber);
+    int value = this->GetCurrentValue();
+    return value;
 }
 
 String ECGPIOAnalogOutput::GetValueText()
