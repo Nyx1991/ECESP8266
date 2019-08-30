@@ -14,6 +14,10 @@ ECGPIO* ECGPIOFactory::CreateECGPIO(uint8_t _pinNumber, uint8_t _pinMode, uint8_
         {
             ret = new ECGPIODigitalOutput(_pinNumber, _caption);
         }
+        if (_pinType == SERVO)
+        {
+            ret = new ECGPIOServo(_pinNumber, _caption);
+        }
     }
 
     if (_pinMode == INPUT)

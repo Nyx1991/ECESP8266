@@ -9,12 +9,13 @@ ECGPIOAnalogInput::ECGPIOAnalogInput(uint8_t _pinNumber, char* _caption)
 
 int ECGPIOAnalogInput::GetValue()
 {
-    return analogRead(this->pPinNumber);
+    this->SetCurrentValue(analogRead(this->pPinNumber));
+    return this->GetCurrentValue();
 }
 
 String ECGPIOAnalogInput::GetValueText()
 {        
-    return String(analogRead(this->pPinNumber));
+    return String(this->GetCurrentValue());
 }
 
 void ECGPIOAnalogInput::SetValue(int _value)

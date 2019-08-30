@@ -14,11 +14,12 @@ int ECGPIOAnalogOutput::GetValue()
 
 String ECGPIOAnalogOutput::GetValueText()
 {    
-    return String(analogRead(this->pPinNumber));
+    return String(this->GetCurrentValue());
 }
 
 void ECGPIOAnalogOutput::SetValue(int _value)
 {    
+    this->SetCurrentValue(_value);
     analogWrite(this->pPinNumber, _value);
     if (ecMQTTManager->isActive())
 		ecMQTTManager->publishStat(GetCaption().c_str(), String(GetValue()).c_str());

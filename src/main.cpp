@@ -38,13 +38,21 @@ void setup()
   }  
 
   ecWebserver->begin();
-  ecMQTTManager->begin();
+  //ecMQTTManager->begin();
   Serial.println("Ready");
-
+  
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(14, INPUT, DIGITAL, "LED"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(4, OUTPUT, DIGITAL, "POWER"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(12, OUTPUT, DIGITAL, "COF1"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(13, OUTPUT, DIGITAL, "COF2"));
+
+/*
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(12, OUTPUT, SERVO, "SERVO"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(4, OUTPUT, ANALOG, "PWM_O"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(17, INPUT, ANALOG, "ADC_I"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(16, OUTPUT, DIGITAL, "DIG_O"));
+  ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(14, INPUT, DIGITAL, "DIG_I"));
+*/
 
   if (ecMQTTManager->isActive())
   {

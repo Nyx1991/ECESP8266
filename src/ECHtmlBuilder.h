@@ -152,7 +152,7 @@ class ECHtmlBuilder
             "function toggle(_g)"
             "{"
                 "x = new XMLHttpRequest();"
-                "x.open('GET', '/cmd?cmd=toggle&time=200&gpio='+_g);"
+                "x.open('GET', '/cmd?cmd=toggle&gpio='+_g);"
                 "x.send();"
                 "updatePage();"
             "}"

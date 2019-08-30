@@ -5,9 +5,11 @@
 #define DIGITAL_STR "DIGITAL"
 #define OUTPUT_STR "OUTPUT"
 #define INPUT_STR "INPUT"
+#define SERVO_STR "SERVO"
 
 #define ANALOG 0x00
 #define DIGITAL 0x01
+#define SERVO 0x03
 
 #include <Arduino.h>
 #include <stdint.h>

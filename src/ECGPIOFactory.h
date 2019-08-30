@@ -7,6 +7,7 @@
 #include "ECGPIOAnalogInput.h"
 #include "ECGPIOAnalogOutput.h"
 #include "ECGPIODigitalInput.h"
+#include "ECGPIOServo.h"
 
 class ECGPIOFactory
 {
