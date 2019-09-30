@@ -184,7 +184,7 @@ class ECHtmlBuilder
         "<title>"+deviceNameStr+"</title>"
         "</head>"
         "<body>";
-        const String body = "<div class='nav'><a href='/'>Index</a> | <a href='/mqtt'>MQTT</a> | <a href='/blynk'>Blynk</a> | <a href='/sysinfo'>System</a></div></body></html>";    
+        const String body = "<div class='nav'><a href='/'>Home</a> | <a href='/mqtt'>MQTT</a> | <a href='/sysinfo'>System</a></div></body></html>";    
         const String wiFiConfigPage = "<div class='wr'><h1>Welcome!</h1><form action='/cmd' method='get'><input type='hidden' value='setwificonf' name='cmd' /><input name='name' type='text' placeholder='DEVICE NAME' /></br><input name='ssid' type='text' placeholder='SSID' /></br>	<input name='password' type='password' placeholder='PASSWORD' /></br>	<button type='submit'>Save and reboot</button></form></div>";
         const String indexPage = "<div class='wr'><h1>"+deviceNameStr+"</h1><div id='gps' class='gps'></div>";
         const String SystemInfoPage = "<div class='wr'><h1>System</h1>";

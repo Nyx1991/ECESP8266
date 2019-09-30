@@ -2,12 +2,26 @@
 #include "ECGPIOManager.h"
 #include "ECGPIO.h"
 
+AsyncMqttClient mqttClient;
+
 void ECMQTTManager::begin()
 {    
     uint16_t *port = new uint16_t();
     ECUtil::str_to_uint16(settings.mqttPort, port);
 
     Serial.println("MQTT starting");
+    mqttClient.onConnect(ECMQTTManager::onMqttConnect);
+    mqttClient.onDisconnect(ECMQTTManager::onMqttDisconnect);    
+    mqttClient.onMessage(ECMQTTManager::onMqttMessage);
+    mqttClient.setServer(settings.mqttHost, *port);
+    mqttClient.setKeepAlive(10);
+    mqttClient.setCleanSession(false);
+    mqttClient.setCredentials(settings.mqttUsername, settings.mqttPass);
+    mqttClient.setClientId(settings.mqttClientid);    
+    Serial.println("Connecting to MQTT...");
+    mqttClient.connect();
+
+    /*
     client.setServer(settings.mqttHost, *port);
     client.setCallback(ECMQTTManager::callback);
     if (client.connect(settings.mqttClientid, settings.mqttUsername, settings.mqttPass))
@@ -20,8 +34,66 @@ void ECMQTTManager::begin()
     {
         Serial.println("MQTT connection failed");        
     }
+    */
 }
 
+void ECMQTTManager::onMqttConnect(bool sessionPresent)
+{
+    String topic = ECMQTTManager::parseFulltopic(settings.mqttFulltopic, "cmd") + "/#";    
+    mqttClient.subscribe(topic.c_str(), 1);
+    
+    topic = String(ECMQTTManager::parseFulltopic(settings.mqttFulltopic, "stat"));    
+    mqttClient.publish(topic.c_str(), 1, false, "Ready");
+
+    Serial.println("MQTT ready");
+}
+
+void ECMQTTManager::onMqttDisconnect(AsyncMqttClientDisconnectReason reason)
+{
+    Serial.println("Reconnecting to MQTT...");
+    mqttClient.connect();
+}
+
+void ECMQTTManager::onMqttMessage(char* _topic, char* _payload, AsyncMqttClientMessageProperties _properties, size_t _len, size_t _index, size_t _total)
+{
+    char *payload = new char[_len+1]();
+    for (unsigned int i = 0;  i < _len+1; i++)
+    {
+        payload[i] = 0x00;
+    }
+    for (unsigned int i = 0;  i < _len; i++)
+    {
+        payload[i] = (char)_payload[i];
+    }    
+
+    size_t payloadSize = ECMQTTManager::GetPayloadElementCount(payload);
+    size_t topicSize = ECMQTTManager::GetTopicElementCount(_topic);        
+    
+    ECDictEntry* payloadDict[payloadSize];
+    ECDictEntry* topicDict[topicSize];
+    ECDictEntry* tmpEntry;
+
+    ECMQTTManager::ParseMQTTPayload(payload, payloadDict);
+    ECMQTTManager::ParseMQTTTopic(_topic, topicDict);    
+    
+    if (ECUtil::FindDictEntryByKey(topicDict, topicSize, "cmd") != nullptr)
+    {
+        ECMQTTManager::ProccessCommand(topicDict, topicSize, payloadDict, payloadSize);
+    }
+
+    delay(10);    
+    delete tmpEntry;    
+    for (size_t i = 0; i < topicSize; i++)
+    {
+        delete topicDict[i];
+    }
+    for (size_t i = 0; i < payloadSize; i++)
+    {
+        delete payloadDict[i];
+    }
+}
+
+/*
 void ECMQTTManager::callback(char* _topic, uint8_t* _payload, unsigned int length)
 {        
     char *payload = new char[length+1]();
@@ -60,16 +132,19 @@ void ECMQTTManager::callback(char* _topic, uint8_t* _payload, unsigned int lengt
         delete payloadDict[i];
     }
 }
+*/
 
 bool ECMQTTManager::isActive()
 {
-    return client.connected();
+    return mqttClient.connected();
 }
 
+/*
 void ECMQTTManager::listen()
 {
-    client.loop();
+    //client.loop();
 }
+*/
 
 String ECMQTTManager::parseFulltopic(const char* _fulltopic, const char *_prefix)
 {
@@ -82,7 +157,7 @@ String ECMQTTManager::parseFulltopic(const char* _fulltopic, const char *_prefix
         {
             if (_fulltopic[i] == '%')
             {
-                ret += String(replacePlaceholder(plchldr.c_str(), _prefix));                
+                ret += String(ECMQTTManager::replacePlaceholder(plchldr.c_str(), _prefix));                
                 ctrlCharActive = false;
             }
             else
@@ -95,7 +170,7 @@ String ECMQTTManager::parseFulltopic(const char* _fulltopic, const char *_prefix
             if (_fulltopic[i] == '%')
             {                
                 plchldr = "";
-                ctrlCharActive = true;                
+                ctrlCharActive = true;
             }
             else
             {                
@@ -125,9 +200,9 @@ String ECMQTTManager::replacePlaceholder(const char* _placeholder, const char *_
 
 void ECMQTTManager::publishStat(const char* _topicExt, const char* _payload)
 {
-    String topic = String(parseFulltopic(settings.mqttFulltopic, "stat"));
+    String topic = String(ECMQTTManager::parseFulltopic(settings.mqttFulltopic, "stat"));
     topic += "/" + String(_topicExt);
-    client.publish(topic.c_str(), _payload);    
+    mqttClient.publish(topic.c_str(), 1, false, _payload);
 }
 
 bool ECMQTTManager::IsPrefix(const char* _value)

@@ -24,9 +24,9 @@ void ECGPIOServo::SetValue(int _value)
 
     for (int i=0; i < 20; i++)
     {
-        digitalWrite(this->pPinNumber,HIGH);
+        digitalWrite(this->pPinNumber, HIGH);
         delayMicroseconds(puls);    
-        digitalWrite(this->pPinNumber,LOW);
+        digitalWrite(this->pPinNumber, LOW);
         delay(19);
     }
 

@@ -13,6 +13,7 @@ void ECWiFiManager::begin()
   Serial.println("WiFi starting");
   
   WiFi.mode(WIFI_STA);
+  WiFi.hostname(settings.name);
   WiFi.begin(settings.ssid, settings.pass);
   if (WiFi.waitForConnectResult() == WL_CONNECTED)
   {
