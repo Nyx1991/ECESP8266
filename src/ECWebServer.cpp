@@ -18,6 +18,7 @@ ECWebServer::ECWebServer()
   server->on("/", std::bind(&ECWebServer::onIndex, this));
   server->on("/cmd", std::bind(&ECWebServer::onCmd, this));
   server->on("/mqtt", std::bind(&ECWebServer::onMqtt, this));
+  server->on("/wifi", std::bind(&ECWebServer::onWifi, this));
   server->on("/sysinfo", std::bind(&ECWebServer::onSysInfo, this));
 }
 
@@ -48,12 +49,17 @@ void ECWebServer::onIndex()
 {
   if (ecWifiManager.isInApMode() || server->arg("page") == "wifi")
   {
-    sendToClient(ecHtmlBuilder.GetWiFiConfigPage());
+    sendToClient(ecHtmlBuilder.GetWiFiConfigHtml());
   }
   else
   {
     sendToClient(ecHtmlBuilder.GetIndexHtml());
-  }  
+  }
+}
+
+void ECWebServer::onWifi()
+{
+  sendToClient(ecHtmlBuilder.GetWiFiConfigHtml());
 }
 
 void ECWebServer::onMqtt()
@@ -162,7 +168,7 @@ void ECWebServer::onCmd()
   }
   else if(cmd == "toggle")
   {
-    gpio = ecGPIOManager.GetECGPIOByPinNr(server->arg("gpio").toInt());    
+    gpio = ecGPIOManager.GetECGPIOByPinNr(server->arg("gpio").toInt());
     if (gpio != nullptr)
     {
       if (server->arg("time") != "")

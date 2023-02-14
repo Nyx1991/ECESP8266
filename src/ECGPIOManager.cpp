@@ -87,6 +87,21 @@ void ICACHE_RAM_ATTR ECGPIOManager::HandleInterrupt()
     }    
 }
 
+bool ECGPIOManager::IsGPIOCaption(const char* _value)
+{    
+    String val(_value);
+
+    for (size_t i = 0; i < gpioCount; i++)
+    {
+        if (val.equals(gpios[i]->GetCaption()))
+        {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
 ECGPIOManager::~ECGPIOManager()
 {
     delete[] gpios;

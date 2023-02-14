@@ -15,6 +15,7 @@ class ECGPIOManager
         static ECGPIO*  GetECGPIOByCaption(const char* _caption);
         static int      GetECGPIOCount();
         static ECGPIO** GetGPIOArray();
+        static bool     IsGPIOCaption(const char* _value);
         static void     ICACHE_RAM_ATTR HandleInterrupt();
 };
 

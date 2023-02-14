@@ -1,6 +1,6 @@
 #include "ECHtmlBuilder.h"
 
-String ECHtmlBuilder::GetWiFiConfigPage()
+String ECHtmlBuilder::GetWiFiConfigHtml()
 { 
     return htmlhead + wiFiConfigPage + body;
 }
@@ -108,17 +108,17 @@ String ECHtmlBuilder::GetSystemInfoHtml()
 }
 
 String ECHtmlBuilder::GetMqttConfHtml()
-{
+{    
     String ret = htmlhead + MqttConfigurationPage;
     ret += "<h2>Active: "+String(ecMQTTManager->isActive())+"</h2>";
     ret += "<input type='hidden' value='setmqttconf' name='cmd' />";
-    ret += "<input name='host' type='text' placeholder='HOST' /></br>";
-    ret += "<input name='port' type='text' placeholder='PORT (1883)' /></br>";
-    ret += "<input name='clientid' type='text' placeholder='CLIENT ID ("+deviceNameStr+"_"+(ESP.getChipId())+")' /></br>";
-    ret += "<input name='username' type='text' placeholder='USERNAME' /></br>";
-    ret += "<input name='pass' type='password' placeholder='PASSWORD' /></br>";
-    ret += "<input name='topic' type='text' placeholder='TOPIC ("+deviceNameStr+"_"+(ESP.getChipId())+")'/></br>";
-    ret += "<input name='fulltopic' type='text' placeholder='FULL TOPIC (%prefix%/%topic%)' /></br>";
+    ret += "<input value='"+String(settings.mqttHost)+"' name='host' type='text' placeholder='HOST' /></br>";
+    ret += "<input value='"+String(settings.mqttPort)+"' name='port' type='text' placeholder='PORT (1883)' /></br>";
+    ret += "<input value='"+String(settings.mqttClientid)+"' name='clientid' type='text' placeholder='CLIENT ID ("+deviceNameStr+"_"+(ESP.getChipId())+")' /></br>";
+    ret += "<input value='"+String(settings.mqttUsername)+"' name='username' type='text' placeholder='USERNAME' /></br>";
+    ret += "<input value='"+String(settings.mqttPass)+"' name='pass' type='password' placeholder='PASSWORD' /></br>";
+    ret += "<input value='"+String(settings.mqttTopic)+"' name='topic' type='text' placeholder='TOPIC ("+deviceNameStr+"_"+(ESP.getChipId())+")'/></br>";
+    ret += "<input value='"+String(settings.mqttFulltopic)+"' name='fulltopic' type='text' placeholder='FULL TOPIC (%topic%/%prefix%)' /></br>";
     ret += "<button type='submit'>Save and reboot</button></form></div>"+body;
 
     return ret;

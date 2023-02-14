@@ -27,8 +27,11 @@ void ECGPIOServo::SetValue(int _value)
         digitalWrite(this->pPinNumber, HIGH);
         delayMicroseconds(puls);    
         digitalWrite(this->pPinNumber, LOW);
-        delay(19);
+        delayMicroseconds(19000);
     }
+
+    Serial.print("Set Servo to: ");
+    Serial.println(_value);
 
     if (ecMQTTManager->isActive())
 		ecMQTTManager->publishStat(GetCaption().c_str(), String(GetValue()).c_str());

@@ -4,6 +4,8 @@
 
 AsyncMqttClient mqttClient;
 
+extern ECGPIOManager  ecGPIOManager;
+
 void ECMQTTManager::begin()
 {    
     uint16_t *port = new uint16_t();
@@ -21,20 +23,6 @@ void ECMQTTManager::begin()
     Serial.println("Connecting to MQTT...");
     mqttClient.connect();
 
-    /*
-    client.setServer(settings.mqttHost, *port);
-    client.setCallback(ECMQTTManager::callback);
-    if (client.connect(settings.mqttClientid, settings.mqttUsername, settings.mqttPass))
-    {        
-        String topic = parseFulltopic(settings.mqttFulltopic, "cmd") + "/#";
-        client.subscribe(topic.c_str());
-        Serial.println("MQTT ready");
-    }
-    else
-    {
-        Serial.println("MQTT connection failed");        
-    }
-    */
 }
 
 void ECMQTTManager::onMqttConnect(bool sessionPresent)
@@ -42,8 +30,8 @@ void ECMQTTManager::onMqttConnect(bool sessionPresent)
     String topic = ECMQTTManager::parseFulltopic(settings.mqttFulltopic, "cmd") + "/#";    
     mqttClient.subscribe(topic.c_str(), 1);
     
-    topic = String(ECMQTTManager::parseFulltopic(settings.mqttFulltopic, "stat"));    
-    mqttClient.publish(topic.c_str(), 1, false, "Ready");
+    topic = String(ECMQTTManager::parseFulltopic(settings.mqttFulltopic, "state"));    
+    mqttClient.publish(topic.c_str(), 1, false, "online");
 
     Serial.println("MQTT ready");
 }
@@ -93,58 +81,10 @@ void ECMQTTManager::onMqttMessage(char* _topic, char* _payload, AsyncMqttClientM
     }
 }
 
-/*
-void ECMQTTManager::callback(char* _topic, uint8_t* _payload, unsigned int length)
-{        
-    char *payload = new char[length+1]();
-    for (unsigned int i = 0;  i < length+1; i++)
-    {
-        payload[i] = 0x00;
-    }
-    for (unsigned int i = 0;  i < length; i++)
-    {
-        payload[i] = (char)_payload[i];
-    }    
-
-    size_t payloadSize = ECMQTTManager::GetPayloadElementCount(payload);
-    size_t topicSize = ECMQTTManager::GetTopicElementCount(_topic);        
-    
-    ECDictEntry* payloadDict[payloadSize];
-    ECDictEntry* topicDict[topicSize];
-    ECDictEntry* tmpEntry;
-
-    ECMQTTManager::ParseMQTTPayload(payload, payloadDict);
-    ECMQTTManager::ParseMQTTTopic(_topic, topicDict);    
-    
-    if (ECUtil::FindDictEntryByKey(topicDict, topicSize, "cmd") != nullptr)
-    {
-        ECMQTTManager::ProccessCommand(topicDict, topicSize, payloadDict, payloadSize);
-    }
-
-    delay(10);    
-    delete tmpEntry;    
-    for (size_t i = 0; i < topicSize; i++)
-    {
-        delete topicDict[i];
-    }
-    for (size_t i = 0; i < payloadSize; i++)
-    {
-        delete payloadDict[i];
-    }
-}
-*/
-
 bool ECMQTTManager::isActive()
 {
     return mqttClient.connected();
 }
-
-/*
-void ECMQTTManager::listen()
-{
-    //client.loop();
-}
-*/
 
 String ECMQTTManager::parseFulltopic(const char* _fulltopic, const char *_prefix)
 {
@@ -200,35 +140,19 @@ String ECMQTTManager::replacePlaceholder(const char* _placeholder, const char *_
 
 void ECMQTTManager::publishStat(const char* _topicExt, const char* _payload)
 {
-    String topic = String(ECMQTTManager::parseFulltopic(settings.mqttFulltopic, "stat"));
+    String topic = String(ECMQTTManager::parseFulltopic(settings.mqttFulltopic, "state"));
     topic += "/" + String(_topicExt);
     mqttClient.publish(topic.c_str(), 1, false, _payload);
 }
 
 bool ECMQTTManager::IsPrefix(const char* _value)
 {
-    return (String(_value).equals("cmd")) || (String(_value).equals("stat"));
+    return (String(_value).equals("cmd")) || (String(_value).equals("state"));
 }
 
 bool ECMQTTManager::IsTopic(const char* _value)
 {
     return (String(_value).equals(settings.mqttTopic));
-}
-
-bool ECMQTTManager::IsGPIOCaption(const char* _value)
-{    
-    String val(_value);
-    ECGPIO** gpios = ECGPIOManager::GetGPIOArray();
-
-    for (size_t i = 0; i < ECGPIOManager::GetECGPIOCount(); i++)
-    {
-        if (val.equals(gpios[i]->GetCaption()))
-        {
-            return true;
-        }
-    }
-    
-    return false;
 }
 
 size_t ECMQTTManager::GetTopicElementCount(const char* _topicString)
@@ -294,7 +218,7 @@ void ECMQTTManager::ParseMQTTTopic(const char* _topicString, ECDictEntry* _topic
             {
                 strncpy(tmpEntry->key, "topic", 40);
             }
-            else if (IsGPIOCaption(currElement.c_str()))
+            else if (ecGPIOManager.IsGPIOCaption(currElement.c_str()))
             {
                 strncpy(tmpEntry->key, "caption", 40);
             }
@@ -350,7 +274,7 @@ void ECMQTTManager::ProccessCommand(ECDictEntry* _topicDict[], size_t _topicDict
 
     if (cmd != nullptr && caption != nullptr)
     {
-        ECGPIO* gpio = ECGPIOManager::GetECGPIOByCaption(caption->value);
+        ECGPIO* gpio = ecGPIOManager.GetECGPIOByCaption(caption->value);
         if (gpio == nullptr)
         {
             return;
@@ -366,6 +290,7 @@ void ECMQTTManager::ProccessCommand(ECDictEntry* _topicDict[], size_t _topicDict
             ECDictEntry* payload = ECUtil::FindDictEntryByKey(_payloadDict, _payLoadDictSize, "0");
             if (payload != nullptr)
             {
+                
                 gpio->SetValue(atoi(payload->value));
             }
         }

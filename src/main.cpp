@@ -61,7 +61,7 @@ void setup()
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(12, OUTPUT, DIGITAL, "COF1"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(13, OUTPUT, DIGITAL, "COF2"));
   */
- 
+    
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(12, OUTPUT, SERVO, "SERVO"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(4, OUTPUT, ANALOG, "PWM_O"));
   ECGPIOManager::AddECGPIO(ECGPIOFactory::CreateECGPIO(17, INPUT, ANALOG, "ADC_I"));
@@ -71,7 +71,7 @@ void setup()
 
   if (ecMQTTManager->isActive())
   {
-      ecMQTTManager->publishStat("ready", "");
+      ecMQTTManager->publishStat("online", "");
   }
 }
 

@@ -184,15 +184,21 @@ class ECHtmlBuilder
         "<title>"+deviceNameStr+"</title>"
         "</head>"
         "<body>";
-        const String body = "<div class='nav'><a href='/'>Home</a> | <a href='/mqtt'>MQTT</a> | <a href='/sysinfo'>System</a></div></body></html>";    
-        const String wiFiConfigPage = "<div class='wr'><h1>Welcome!</h1><form action='/cmd' method='get'><input type='hidden' value='setwificonf' name='cmd' /><input name='name' type='text' placeholder='DEVICE NAME' /></br><input name='ssid' type='text' placeholder='SSID' /></br>	<input name='password' type='password' placeholder='PASSWORD' /></br>	<button type='submit'>Save and reboot</button></form></div>";
+        const String body = "<div class='nav'><a href='/'>Home</a> | <a href='/wifi'>WiFi</a> | <a href='/mqtt'>MQTT</a> | <a href='/sysinfo'>System</a></div></body></html>";    
+        const String wiFiConfigPage = "<div class='wr'><h1>WiFi</h1><form action='/cmd' method='get'>"
+                                    "<input type='hidden' value='setwificonf' name='cmd' />"
+                                    "<input value='"+String(settings.name)+"' name='name' type='text' placeholder='DEVICE NAME' /></br>"
+                                    "<input value='"+String(settings.ssid)+"' name='ssid' type='text' placeholder='SSID' /></br>"
+                                    "<input value='"+String(settings.pass)+"' name='password' type='password' placeholder='PASSWORD' /></br>"
+                                    "<button type='submit'>Save and reboot</button></form></div>";
+
         const String indexPage = "<div class='wr'><h1>"+deviceNameStr+"</h1><div id='gps' class='gps'></div>";
         const String SystemInfoPage = "<div class='wr'><h1>System</h1>";
         const String MqttConfigurationPage = "<div class='wr'><h1>MQTT<form action='/cmd' method='get'></h1>";
         String GetECGPIOHtmlForECGPIO(ECGPIO* _gpio);     
 
     public:
-        String GetWiFiConfigPage();
+        String GetWiFiConfigHtml();
         String GetIndexHtml();
         String GetSystemInfoHtml();
         String GetMqttConfHtml();
